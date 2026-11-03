@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
 
     // ??? _agent
 
+    private NavMeshAgent _agent;
+
     // STEP 1 -----------------------------------------------------------------
 
 
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     // We need a Vector3 to keep track of their LAST KNOWN LOCATION.
     // Add a MEMBER VARIABLE here for that location.
     // It does NOT need to be tunable in the Inspector.
+    private Vector3 _lastPos;
     
 
     // STEP 4 -----------------------------------------------------------------
@@ -53,6 +56,12 @@ public class Player : MonoBehaviour
     //    _mainCamera = Camera.main;
     //    _animator = GetComponent<Animator>();
     //}
+    private void Start()
+    {
+        _mainCamera = Camera.main;
+        _animator = GetComponent<Animator>();
+        _agent = GetComponent<NavMeshAgent>();
+    }
     // STEP 2 -----------------------------------------------------------------
 
     // ------------------------------------------------------------------------
@@ -75,6 +84,7 @@ public class Player : MonoBehaviour
                 // Make the NavMeshAgent move to this position.
                 //
                 // Feature 2 should work after this step.
+                _agent.SetDestination(mouseHitPosition);
 
 
                 // STEP 3 -----------------------------------------------------
@@ -87,8 +97,8 @@ public class Player : MonoBehaviour
                 // 
                 // You'll need this GameObject's Transform's position.
                 // See an example in the documentation: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/Transform-position.html
-
-
+                    
+                _lastPos = GetComponent<Transform>().position;
                 // STEP 5 -----------------------------------------------------
             }
         }
@@ -104,12 +114,16 @@ public class Player : MonoBehaviour
         // You'll need to read the NavMeshAgent documentation and choose
         //      the correct one: https://docs.unity3d.com/6000.0/Documentation/ScriptReference/AI.NavMeshAgent.html
         // Feature 3 should work after this.
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            _agent.Warp(_lastPos);
+        }
 
 
         // STEP 6 -------------------------------------------------------------
 
         // Uncomment the below line to fix the Pudu's animation if you want.
-        //_animator.SetBool("isMoving", _agent.velocity.magnitude > 0.0f);
+        _animator.SetBool("isMoving", _agent.velocity.magnitude > 0.0f);
     }
     
     // ------------------------------------------------------------------------
